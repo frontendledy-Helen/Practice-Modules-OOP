@@ -4,7 +4,13 @@ export class Person {
     constructor(firstName, lastName, birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.#birthday = birthday;
+
+
+        if (!/^\d{2}-\d{2}-\d{4}$/.test(birthday) || isNaN(new Date(birthday).getTime())) { // проверка некорректной даты || проверка на числовое значение даты
+            console.log('Неверный формат даты')
+        } else {
+            this.#birthday = birthday;
+        }
     }
 
     get birthday() {
@@ -16,9 +22,8 @@ export class Person {
     }
 
     getAgeNum() { // получим количество лет
-        let today = new Date(); // гггг-мм-дд
-        const [month, day, year] = this.#birthday.split("-"); // получили массив, мм-дд-гггг
-        const birthDate = new Date(year, month - 1, day); // преобразовали гггг-мм-дд
+        let today = new Date(); // дата сегодня мм-дд-гггг
+        const birthDate = new Date(this.#birthday); // дата дня рождения мм-дд-гггг
 
         let age = today.getFullYear() - birthDate.getFullYear(); // получили сколько лет
 

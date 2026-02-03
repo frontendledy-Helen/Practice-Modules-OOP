@@ -6,28 +6,36 @@ const worker1 = new Worker('Иван', 'Иванов', '11-05-1998', 'Прогр
 const worker2 = new Worker('Марина', 'Васильева', '11-12-2001', 'Дизайнер');
 const worker3 = new Worker('Дмитрий', 'Попов', '11-08-1976', 'Менеджер проектов');
 const worker4 = new Worker('Ольга', 'Кузнецова', '04-05-2001', 'Бизнес-аналитик');
-const worker5 = new Worker('Андрей', 'Николаев', '01-25-1988', 'Разработчик интерфейсов');
+const worker5 = new Worker('Андрей', 'Николаев', '02-25-1988', 'Разработчик интерфейсов');
 
 
 worker5.rate = 2200;
 worker4.rate = 2500;
 worker3.rate = 3000;
 
-worker1.addDays(12);
+worker1.addDays(-12);
 worker2.addDays(22);
 worker3.addDays(20);
 worker4.addDays(31);
 worker5.addDays(15);
 worker1.addDays(-2);
-worker2.addDays(22);
+worker2.addDays(-22);
 worker3.addDays(33);
 worker4.addDays(48);
 worker5.addDays(50);
 worker1.addDays(12);
 worker2.addDays(22);
 worker3.addDays(-3);
-worker4.addDays(31);
-worker5.addDays(-5);
+worker4.addDays(28);
+worker5.addDays(-4);
+
+// после проверки итог отработанных дней в соответствии с количеством дней в текущем месяце
+console.log(`Итого/${worker1.getFullName()}/отработано дней за текущий месяц ${worker1.days}`);
+console.log(`Итого/${worker2.getFullName()}/отработано дней за текущий месяц ${worker2.days}`);
+console.log(`Итого/${worker3.getFullName()}/отработано дней за текущий месяц ${worker3.days}`);
+console.log(`Итого/${worker4.getFullName()}/отработано дней за текущий месяц ${worker4.days}`);
+console.log(`Итого/${worker5.getFullName()}/отработано дней за текущий месяц ${worker5.days}`);
+
 
 console.log(worker1.getFullName() + ' ' + worker1.getSalary() + ' рублей');
 console.log(worker2.getFullName() + ' ' + worker2.getSalary() + ' рублей');

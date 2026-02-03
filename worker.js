@@ -9,7 +9,6 @@ export class Worker extends Person {
         this.position = position;
         this.#rate = 1000;
         this.#days = 0;
-        this.currentMonth = new Date().getMonth(); //текущий месяц (номер)
     }
 
     get rate() {
@@ -17,13 +16,10 @@ export class Worker extends Person {
     }
 
     set rate(newRate) {
-
-        let today = new Date().getMonth();
         if (newRate >= 1000) {
             this.#rate = newRate;
         } else {
             console.log('Ошибка, ставка менее 1000 руб.')
-            this.#rate = 1000;
         }
     }
 
@@ -32,35 +28,34 @@ export class Worker extends Person {
     }
 
 
-    addDays(days) {
-
-        // находим дату начала следующего месяца
-        const nextMonthFirstDay = new Date(this.currentMonth + 1, 1); // Первый день следующего месяца
-
-        // перемещение назад на один день, чтобы получить последний день текущего месяца
-        nextMonthFirstDay.setDate(nextMonthFirstDay.getDate() - 1);
-
+    addDays(days) {  // добавить отработанные дни
         // получим число последнего дня текущего месяца = кол-во дней текущ месяца
-        const lastDayOfCurrentMonth = nextMonthFirstDay.getDate();
+        const lastDayOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+        const workerName = this.getFullName();
 
-        if (days > 0 || days <= lastDayOfCurrentMonth) {
-            this.#days += days;
+        if (days < 0 && this.#days + days < 0) {
+            console.log(`${workerName} Ошибка: нельзя вычесть больше дней, чем уже отработано`);
+            return;
         }
+
+        if (this.#days + days > lastDayOfCurrentMonth) {
+            console.log(`${workerName} Ошибка: нельзя добавить ${this.#days + days} дней, т.к В текущем месяце ${lastDayOfCurrentMonth} дней.`)
+            return this.#days = lastDayOfCurrentMonth;
+        }
+
+        this.#days += days;
     }
 
-    getSalary() {
-        // Преобразуем дату в правильный формат
-        const birthDateMonth = this.birthday.split("-")[0]; // получили массив ['мм', 'дд', 'гггг'], по индексу 0 = 11 месяц
-        const currentMonth = this.currentMonth + 1; // получили текущий месяц (число)
-        const birthDateMonthNum = parseFloat(birthDateMonth); //преобразуем строку в число
+    getSalary() {  // рассчитать зарплату исходя из ставки и отработанных дней
+        const currentMonth = new Date().getMonth(); //текущий месяц (индекс)
+        const birthDateMonth = new Date(this.birthday).getMonth(); // получили месяц даты рождения
 
-        if (birthDateMonthNum === currentMonth) {
-            const salary = this.#days * this.#rate * 1.1;
-            return `- ${salary}`;
-        } else {
-            const salary = this.#days * this.#rate;
-            return `- ${salary}`;
+        let salary = this.#days * this.#rate;
+
+        if (birthDateMonth === currentMonth) {
+            salary = salary * 1.1;
         }
+        return `- ${Math.round(salary)}`;
     }
 
     // Статический метод для поиска сотрудника, который отработал больше всех
